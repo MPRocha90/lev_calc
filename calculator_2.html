@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Trading App</title>
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			background-color: #222;
+			color: #eee;
+			margin: 0;
+			padding: 0;
+		}
+		.container {
+			max-width: 600px;
+			margin: 0 auto;
+			padding: 20px;
+			background-color: #333;
+			box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+			border-radius: 5px;
+		}
+		h1 {
+			font-size: 24px;
+			margin-top: 0;
+			color: #fff;
+		}
+		label {
+			display: block;
+			margin-bottom: 0px;
+			font-weight: bold;
+		}
+		input[type="text"], textarea {
+			width: 100%;
+			padding: 10px;
+			border-radius: 5px;
+			border: 1px solid #ccc;
+			box-sizing: border-box;
+			resize: vertical;
+			font-size: 16px;
+			margin-bottom: 0px;
+			background-color: #444;
+			color: #eee;
+		}
+		div {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			margin-bottom: 0px;
+		}
+		button {
+			padding: 10px 20px;
+			background-color: #4CAF50;
+			color: #fff;
+			border: none;
+			border-radius: 5px;
+			cursor: pointer;
+			font-size: 16px;
+			transition: background-color 0.3s ease;
+		}
+		button:hover {
+			background-color: #5cbf62;
+		}
+		table {
+			width: 100%;
+			border-collapse: collapse;
+			margin-top: 0px;
+			font-size: 16px;
+			background-color: #444;
+			color: #eee;
+		}
+		table th, table td {
+			padding: 10px;
+			border: 1px solid #ccc;
+			text-align: left;
+		}
+		table th {
+			background-color: #222;
+			font-weight: bold;
+		}
+		.green {
+			color: green;
+		}
+		.red {
+			color: red;
+		}
+	</style>
+	<script type="text/javascript">
+		function calculate() {
+			var input = document.getElementById("input").value;
+			var lines = input.split('\n');
+			var title = lines[0].replace('#', '');
+			var entry, take_profit, stop_loss;
+
+			for (var i = 1; i < lines.length; i++) {
+				if (lines[i].startsWith('Long = ')) {
+					entry = parseFloat(lines[i].substring(7));
+				} else if (lines[i].startsWith('Target = ')) {
+					take_profit = parseFloat(lines[i].substring(9));
+				} else if (lines[i].startsWith('Stop = ')) {
+					stop_loss = parseFloat(lines[i].substring(7));
+				}
+			}
+
+			var leverage = Math.floor(entry / Math.abs(entry - stop_loss)) - 1;
+			var direction = entry > stop_loss ? 'LONG' : 'SHORT';
+
+			document.getElementById('title').innerHTML = title;
+			document.getElementById('entry').innerHTML = entry.toFixed(8);
+			document.getElementById('take-profit').innerHTML = take_profit.toFixed(8);
+			document.getElementById('stop-loss').innerHTML = stop_loss.toFixed(8);
+			document.getElementById('leverage').innerHTML = leverage;
+			document.getElementById('direction').innerHTML = direction;
+			document.getElementById('direction').classList.add(direction.toLowerCase());
+		}
+		
+		function clearInput() {
+			document.getElementById("input").value = "";
+		}
+		
+	</script>
+</head>
+<body>
+	
+	
+	
+	<textarea id="input" rows="10" cols="50"></textarea>
+	<br>
+	
+	<div>
+		<button onclick="calculate()">Calculate</button>
+		<button onclick="clearText()">Clear</button>
+	</div>
+
+	<br><br>
+	<table>
+		<tr>
+			<td>Token:</td>
+			<td id="title"></td>
+		</tr>
+		<tr>
+			<td>Entry:</td>
+			<td id="entry"></td>
+		</tr>
+		<tr>
+			<td>Take Profit:</td>
+			<td id="take-profit"></td>
+		</tr>
+		<tr>
+			<td>Stop Loss:</td>
+			<td id="stop-loss"></td>
+		</tr>
+		<tr>
+			<td>Leverage:</td>
+			<td id="leverage"></td>
+		</tr>
+		<tr>
+			<td>Direction:</td>
+			<td id="direction"></td>
+		</tr>
+	</table>
+</body>
+</html>
